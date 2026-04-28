@@ -323,18 +323,21 @@ const homeEventHighlights = [
     copy: 'Clubhouse-friendly social programming pulled from the current community events rhythm.',
     image: '/images/ppe-clubhouse.jpg',
     label: 'Social',
+    date: 'May 24',
   },
   {
     title: 'Lakeside gatherings',
     copy: 'Scenic common areas become part of the digital story instead of just a rotating image on the old site.',
     image: '/images/ppe-lake-sunrise.jpg',
     label: 'Lifestyle',
+    date: 'May 27',
   },
   {
     title: 'Golf club activity',
     copy: 'Leagues, tee times, and resident golf meetups connect directly into the dedicated golf microsite.',
     image: '/images/ppe-course-lake.jpg',
     label: 'Golf',
+    date: 'May 31',
   },
 ];
 
@@ -371,6 +374,15 @@ const neighborPreview = [
     text: 'Selling my golf cart. Message me if you want details.',
     time: '1h ago',
   },
+];
+
+const footerQuickLinks = [
+  'About Us',
+  'Amenities',
+  'Residents',
+  'Events',
+  'HOA Documents',
+  'Contact Us',
 ];
 
 const communityGallery: GalleryImage[] = [
@@ -1402,6 +1414,7 @@ function App() {
                     <article key={item.title} className="event-preview-card">
                       <img src={item.image} alt={item.title} />
                       <div className="event-preview-copy">
+                        <div className="event-date-chip">{item.date}</div>
                         <span>{item.label}</span>
                         <h3>{item.title}</h3>
                         <p>{item.copy}</p>
@@ -1495,6 +1508,51 @@ function App() {
                   </ul>
                 </article>
               </div>
+              <div className="golf-scorecard-panel">
+                <div className="golf-scorecard-card">
+                  <h3>Scorecard highlights</h3>
+                  <div className="golf-score-header">
+                    <span>Hole</span>
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                  </div>
+                  <div className="golf-score-row">
+                    <span>Par</span>
+                    <span>4</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>3</span>
+                    <span>4</span>
+                  </div>
+                  <div className="golf-score-row">
+                    <span>Yards</span>
+                    <span>320</span>
+                    <span>150</span>
+                    <span>350</span>
+                    <span>130</span>
+                    <span>300</span>
+                    <span>120</span>
+                    <span>310</span>
+                    <span>160</span>
+                    <span>280</span>
+                  </div>
+                  <a href="https://www.poloparkeastgolf.com/scorecard/" target="_blank" rel="noreferrer">
+                    View full scorecard
+                  </a>
+                </div>
+                <img src="/images/golf-tile-3.png" alt="Polo Park East golf course promotional image" />
+              </div>
               <div className="golf-contact-strip">
                 <span>Davenport, FL</span>
                 <span>(863) 424-0093</span>
@@ -1530,6 +1588,54 @@ function App() {
               </button>
             </section>
           </aside>
+        </section>
+
+        <section className="concept-footer">
+          <div className="concept-footer-brand">
+            <img src="/images/ppe-logo.png" alt="Polo Park East logo" />
+            <div>
+              <strong>Polo Park East</strong>
+              <p>
+                A resident-owned 55+ modular home community offering golf, scenic
+                Florida lakeside living, and a warm neighborhood atmosphere.
+              </p>
+            </div>
+          </div>
+          <div className="concept-footer-links">
+            <span>Quick links</span>
+            <div>
+              {footerQuickLinks.map((item) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    if (item === 'Residents' || item === 'HOA Documents') {
+                      setCommunityView('residents');
+                      return;
+                    }
+                    if (item === 'Amenities' || item === 'About Us') {
+                      setCommunityView('explore');
+                      return;
+                    }
+                    if (item === 'Events') {
+                      setCommunityView('explore');
+                      return;
+                    }
+                    setCommunityView('residents');
+                  }}
+                  type="button"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="concept-footer-social">
+            <span>Connect with us</span>
+            <p>Use the resident portal for member resources, updates, and community notices.</p>
+            <a href="https://poloparkeast.com/membership-login/" target="_blank" rel="noreferrer">
+              Resident login
+            </a>
+          </div>
         </section>
       </div>
     );

@@ -1156,6 +1156,23 @@ a {
   padding: 14px;
 }
 
+.event-date-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  min-height: 56px;
+  margin-bottom: 10px;
+  border-radius: 16px;
+  color: var(--navy-900);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 229, 211, 0.98));
+  border: 1px solid rgba(184, 147, 83, 0.22);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .event-preview-copy span,
 .resident-app-head span,
 .neighbor-chat-head span {
@@ -1395,6 +1412,74 @@ a {
   border-top: 0;
 }
 
+.golf-scorecard-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) 120px;
+  gap: 14px;
+  padding: 0 20px 18px;
+}
+
+.golf-scorecard-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink-900);
+}
+
+.golf-scorecard-card h3 {
+  margin: 0 0 12px;
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+}
+
+.golf-score-header,
+.golf-score-row {
+  display: grid;
+  grid-template-columns: 48px repeat(9, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 0.75rem;
+  text-align: center;
+  border-top: 1px solid rgba(19, 48, 74, 0.08);
+}
+
+.golf-score-header {
+  border-top: 0;
+  color: var(--ink-700);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.golf-score-row span:first-child,
+.golf-score-header span:first-child {
+  text-align: left;
+  font-weight: 800;
+}
+
+.golf-scorecard-card a {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  color: var(--navy-900);
+  background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.golf-scorecard-panel img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
 .golf-contact-strip {
   display: flex;
   flex-wrap: wrap;
@@ -1440,6 +1525,85 @@ a {
   width: 100%;
 }
 
+.concept-footer {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.9fr;
+  gap: 18px;
+  padding: 22px 24px;
+  border-radius: 24px;
+  color: white;
+  background: linear-gradient(180deg, rgba(9, 28, 43, 0.98), rgba(12, 38, 59, 0.98));
+  box-shadow: var(--shadow-soft);
+}
+
+.concept-footer-brand,
+.concept-footer-links,
+.concept-footer-social {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.concept-footer-brand {
+  grid-template-columns: 92px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.concept-footer-brand img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  border-radius: 20px;
+  padding: 8px;
+  background: linear-gradient(180deg, rgba(17, 42, 64, 0.98), rgba(9, 27, 43, 0.98));
+  border: 1px solid rgba(227, 193, 118, 0.38);
+}
+
+.concept-footer-brand strong,
+.concept-footer-links span,
+.concept-footer-social span {
+  font-family: 'Fraunces', serif;
+  font-size: 1.18rem;
+}
+
+.concept-footer p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.6;
+}
+
+.concept-footer-links div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 14px;
+}
+
+.concept-footer-links button {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.84);
+  padding: 0;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.concept-footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  color: var(--navy-900);
+  background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 @keyframes pageFade {
   from {
     opacity: 0;
@@ -1465,7 +1629,8 @@ a {
   .stat-grid,
   .stat-grid.compact,
   .rate-grid,
-  .link-grid {
+  .link-grid,
+  .concept-footer {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1526,7 +1691,9 @@ a {
   .gallery-grid,
   .event-card-grid,
   .amenity-ribbon-grid,
-  .golf-preview-grid {
+  .golf-preview-grid,
+  .golf-scorecard-panel,
+  .concept-footer {
     grid-template-columns: 1fr;
   }
 
@@ -1545,6 +1712,15 @@ a {
 
   .concept-hero-card {
     min-height: 420px;
+  }
+
+  .concept-footer-brand {
+    grid-template-columns: 72px 1fr;
+  }
+
+  .concept-footer-brand img {
+    width: 72px;
+    height: 72px;
   }
 
   .gallery-card,
