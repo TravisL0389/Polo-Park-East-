@@ -34,7 +34,7 @@ import {
 } from 'react';
 
 type Experience = 'community' | 'golf';
-type CommunityView = 'overview' | 'residents' | 'explore' | 'concierge';
+type CommunityView = 'overview' | 'residents' | 'explore' | 'concierge' | 'admin';
 type GolfView = 'overview' | 'rates' | 'leagues' | 'course';
 type ViewKey = CommunityView | GolfView;
 type ChannelKey = 'general' | 'events' | 'marketplace' | 'golf';
@@ -85,6 +85,70 @@ interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+}
+
+interface AdminSession {
+  username: string;
+  signedInAt: string;
+}
+
+interface EditableUpdateItem {
+  title: string;
+  copy: string;
+  meta: string;
+}
+
+interface EditableEventItem {
+  title: string;
+  copy: string;
+  image: string;
+  label: string;
+  date: string;
+}
+
+interface EditableAmenityItem {
+  title: string;
+  image: string;
+}
+
+interface EditableNeighborItem {
+  author: string;
+  text: string;
+  time: string;
+}
+
+interface EditableRateItem {
+  title: string;
+  value: string;
+  note: string;
+}
+
+interface EditableLeagueItem {
+  title: string;
+  copy: string;
+}
+
+interface SiteContent {
+  heroBadge: string;
+  heroTitle: string;
+  heroText: string;
+  heroImage: string;
+  residentAppEyebrow: string;
+  residentAppTitle: string;
+  residentAppSubtitle: string;
+  residentAppBullets: string[];
+  residentUpdates: EditableUpdateItem[];
+  eventHighlights: EditableEventItem[];
+  amenitySpotlights: EditableAmenityItem[];
+  golfPanelTitle: string;
+  golfPanelSubtitle: string;
+  golfPanelImage: string;
+  golfRates: EditableRateItem[];
+  golfLeagues: EditableLeagueItem[];
+  golfScorecardImage: string;
+  neighborPreview: EditableNeighborItem[];
+  footerDescription: string;
+  footerQuickLinks: string[];
 }
 
 const communityHeroStats = [
@@ -385,6 +449,31 @@ const footerQuickLinks = [
   'Contact Us',
 ];
 
+const DEFAULT_SITE_CONTENT: SiteContent = {
+  heroBadge: 'A resident-owned 55+ golf community',
+  heroTitle: 'Welcome Home to Polo Park East',
+  heroText:
+    'A refreshed digital front door for the Davenport community, built around resident tools, neighborhood connection, amenities, and golf.',
+  heroImage: '/images/ppe-sign-hero.jpeg',
+  residentAppEyebrow: 'PPE resident app',
+  residentAppTitle: 'Your community in the palm of your hand.',
+  residentAppSubtitle: 'Add the resident app to your home screen after verification.',
+  residentAppBullets: [...residentAppBullets],
+  residentUpdates: residentPulse.map((item) => ({ ...item })),
+  eventHighlights: homeEventHighlights.map((item) => ({ ...item })),
+  amenitySpotlights: amenitySpotlights.map((item) => ({ ...item })),
+  golfPanelTitle: 'Polo Park East Golf Club',
+  golfPanelSubtitle: 'A premier 9-hole golf experience',
+  golfPanelImage: '/images/golf-hero.jpg',
+  golfRates: golfRates.map((item) => ({ ...item })),
+  golfLeagues: golfLeagues.map((item) => ({ ...item })),
+  golfScorecardImage: '/images/golf-tile-3.png',
+  neighborPreview: neighborPreview.map((item) => ({ ...item })),
+  footerDescription:
+    'A resident-owned 55+ modular home community offering golf, scenic Florida lakeside living, and a warm neighborhood atmosphere.',
+  footerQuickLinks: [...footerQuickLinks],
+};
+
 const communityGallery: GalleryImage[] = [
   {
     title: 'Entrance and arrival',
@@ -534,7 +623,28 @@ const channelMeta: Record<ChannelKey, { title: string; description: string }> = 
 const storageKeys = {
   resident: 'ppe_resident_access_v2',
   chat: 'ppe_neighbor_chat_v1',
+  admin: 'ppe_admin_session_v1',
+  siteContent: 'ppe_site_content_v1',
 };
+
+const adminAccounts = [
+  { username: 'officeadmin', passcode: 'PPEOFFICE2026' },
+  { username: 'boardadmin', passcode: 'PPEBOARD2026' },
+] as const;
+
+const officialImageChoices = [
+  { label: 'Community sign hero', src: '/images/ppe-sign-hero.jpeg' },
+  { label: 'Lake sunrise', src: '/images/ppe-lake-sunrise.jpg' },
+  { label: 'Pool', src: '/images/ppe-pool.jpg' },
+  { label: 'Golf course lake', src: '/images/ppe-course-lake.jpg' },
+  { label: 'Clubhouse', src: '/images/ppe-clubhouse.jpg' },
+  { label: 'Neighborhood', src: '/images/ppe-neighborhood.jpg' },
+  { label: 'Golf hero', src: '/images/golf-hero.jpg' },
+  { label: 'Golf sign', src: '/images/golf-sign.jpg' },
+  { label: 'Golf tile 1', src: '/images/golf-tile-1.png' },
+  { label: 'Golf tile 2', src: '/images/golf-tile-2.png' },
+  { label: 'Golf tile 3', src: '/images/golf-tile-3.png' },
+];
 
 const communityNav: Array<{ key: CommunityView; label: string }> = [
   { key: 'overview', label: 'Overview' },
@@ -549,6 +659,31 @@ const golfNav: Array<{ key: GolfView; label: string }> = [
   { key: 'leagues', label: 'Leagues' },
   { key: 'course', label: 'Course Views' },
 ];
+
+function cloneSiteContent(source: SiteContent = DEFAULT_SITE_CONTENT): SiteContent {
+  return {
+    heroBadge: source.heroBadge,
+    heroTitle: source.heroTitle,
+    heroText: source.heroText,
+    heroImage: source.heroImage,
+    residentAppEyebrow: source.residentAppEyebrow,
+    residentAppTitle: source.residentAppTitle,
+    residentAppSubtitle: source.residentAppSubtitle,
+    residentAppBullets: [...source.residentAppBullets],
+    residentUpdates: source.residentUpdates.map((item) => ({ ...item })),
+    eventHighlights: source.eventHighlights.map((item) => ({ ...item })),
+    amenitySpotlights: source.amenitySpotlights.map((item) => ({ ...item })),
+    golfPanelTitle: source.golfPanelTitle,
+    golfPanelSubtitle: source.golfPanelSubtitle,
+    golfPanelImage: source.golfPanelImage,
+    golfRates: source.golfRates.map((item) => ({ ...item })),
+    golfLeagues: source.golfLeagues.map((item) => ({ ...item })),
+    golfScorecardImage: source.golfScorecardImage,
+    neighborPreview: source.neighborPreview.map((item) => ({ ...item })),
+    footerDescription: source.footerDescription,
+    footerQuickLinks: [...source.footerQuickLinks],
+  };
+}
 
 function readStoredResident(): ResidentAccess | null {
   try {
@@ -565,6 +700,58 @@ function readStoredChat(): MessageItem[] {
     return raw ? (JSON.parse(raw) as MessageItem[]) : starterMessages;
   } catch {
     return starterMessages;
+  }
+}
+
+function readStoredAdminSession(): AdminSession | null {
+  try {
+    const raw = window.localStorage.getItem(storageKeys.admin);
+    return raw ? (JSON.parse(raw) as AdminSession) : null;
+  } catch {
+    return null;
+  }
+}
+
+function readStoredSiteContent(): SiteContent {
+  try {
+    const raw = window.localStorage.getItem(storageKeys.siteContent);
+
+    if (!raw) {
+      return cloneSiteContent(DEFAULT_SITE_CONTENT);
+    }
+
+    const parsed = JSON.parse(raw) as Partial<SiteContent>;
+
+    return cloneSiteContent({
+      ...DEFAULT_SITE_CONTENT,
+      ...parsed,
+      residentAppBullets: Array.isArray(parsed.residentAppBullets)
+        ? parsed.residentAppBullets
+        : DEFAULT_SITE_CONTENT.residentAppBullets,
+      residentUpdates: Array.isArray(parsed.residentUpdates)
+        ? parsed.residentUpdates
+        : DEFAULT_SITE_CONTENT.residentUpdates,
+      eventHighlights: Array.isArray(parsed.eventHighlights)
+        ? parsed.eventHighlights
+        : DEFAULT_SITE_CONTENT.eventHighlights,
+      amenitySpotlights: Array.isArray(parsed.amenitySpotlights)
+        ? parsed.amenitySpotlights
+        : DEFAULT_SITE_CONTENT.amenitySpotlights,
+      golfRates: Array.isArray(parsed.golfRates)
+        ? parsed.golfRates
+        : DEFAULT_SITE_CONTENT.golfRates,
+      golfLeagues: Array.isArray(parsed.golfLeagues)
+        ? parsed.golfLeagues
+        : DEFAULT_SITE_CONTENT.golfLeagues,
+      neighborPreview: Array.isArray(parsed.neighborPreview)
+        ? parsed.neighborPreview
+        : DEFAULT_SITE_CONTENT.neighborPreview,
+      footerQuickLinks: Array.isArray(parsed.footerQuickLinks)
+        ? parsed.footerQuickLinks
+        : DEFAULT_SITE_CONTENT.footerQuickLinks,
+    });
+  } catch {
+    return cloneSiteContent(DEFAULT_SITE_CONTENT);
   }
 }
 
@@ -684,6 +871,12 @@ function App() {
   const [experience, setExperience] = useState<Experience>('community');
   const [communityView, setCommunityView] = useState<CommunityView>('overview');
   const [golfView, setGolfView] = useState<GolfView>('overview');
+  const [siteContent, setSiteContent] = useState<SiteContent>(() => cloneSiteContent());
+  const [adminDraft, setAdminDraft] = useState<SiteContent>(() => cloneSiteContent());
+  const [adminSession, setAdminSession] = useState<AdminSession | null>(null);
+  const [adminUsername, setAdminUsername] = useState('');
+  const [adminPasscode, setAdminPasscode] = useState('');
+  const [adminNotice, setAdminNotice] = useState('');
   const [residentAccess, setResidentAccess] = useState<ResidentAccess | null>(null);
   const [residentName, setResidentName] = useState('');
   const [homesite, setHomesite] = useState('');
@@ -708,6 +901,10 @@ function App() {
   const deferredConciergeInput = useDeferredValue(conciergeInput);
 
   useEffect(() => {
+    const storedContent = readStoredSiteContent();
+    setSiteContent(storedContent);
+    setAdminDraft(cloneSiteContent(storedContent));
+    setAdminSession(readStoredAdminSession());
     setResidentAccess(readStoredResident());
     setMessages(readStoredChat());
     setInstallState(
@@ -743,6 +940,9 @@ function App() {
 
   const activeCommunityView = communityView;
   const activeGolfView = golfView;
+  const communitySectionNav = adminSession
+    ? [...communityNav, { key: 'admin' as CommunityView, label: 'Admin CMS' }]
+    : communityNav;
   const visibleMessages = messages.filter((message) => message.channel === channel);
   const headerNavItems =
     experience === 'community'
@@ -801,13 +1001,16 @@ function App() {
           },
         ];
 
-  const switchExperience = (next: Experience) => {
+  const switchExperience = (
+    next: Experience,
+    targetView?: CommunityView | GolfView,
+  ) => {
     startTransition(() => {
       setExperience(next);
       if (next === 'community') {
-        setCommunityView('overview');
+        setCommunityView((targetView as CommunityView | undefined) ?? 'overview');
       } else {
-        setGolfView('overview');
+        setGolfView((targetView as GolfView | undefined) ?? 'overview');
       }
     });
   };
@@ -843,6 +1046,140 @@ function App() {
     setResidentName('');
     setHomesite('');
     setAccessCode('');
+  };
+
+  const updateAdminField = <K extends keyof SiteContent>(field: K, value: SiteContent[K]) => {
+    setAdminDraft((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  };
+
+  const updateStringListItem = (
+    field: 'residentAppBullets' | 'footerQuickLinks',
+    index: number,
+    value: string,
+  ) => {
+    setAdminDraft((current) => {
+      const next = cloneSiteContent(current);
+      next[field][index] = value;
+      return next;
+    });
+  };
+
+  const updateObjectListItem = (
+    field:
+      | 'residentUpdates'
+      | 'eventHighlights'
+      | 'amenitySpotlights'
+      | 'golfRates'
+      | 'golfLeagues'
+      | 'neighborPreview',
+    index: number,
+    key: string,
+    value: string,
+  ) => {
+    setAdminDraft((current) => {
+      const next = cloneSiteContent(current);
+      const nextItem = next[field][index] as unknown as Record<string, string> | undefined;
+
+      if (nextItem) {
+        nextItem[key] = value;
+      }
+
+      return next;
+    });
+  };
+
+  const readUploadedImage = async (file?: File | null) => {
+    if (!file) {
+      return null;
+    }
+
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(new Error('Unable to read the selected image.'));
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const applyUploadedAdminImage = async (
+    file: File | null | undefined,
+    onComplete: (nextImage: string) => void,
+  ) => {
+    try {
+      const uploadedImage = await readUploadedImage(file);
+
+      if (!uploadedImage) {
+        return;
+      }
+
+      onComplete(uploadedImage);
+      setAdminNotice('Image updated in the admin draft. Save changes to publish it.');
+    } catch {
+      setAdminNotice('That image could not be loaded. Please try another file.');
+    }
+  };
+
+  const openAdminSection = () => {
+    switchExperience('community', 'admin');
+    setAdminNotice('');
+  };
+
+  const loginAdmin = () => {
+    const matchedAccount = adminAccounts.find(
+      (account) =>
+        account.username === adminUsername.trim().toLowerCase()
+        && account.passcode === adminPasscode.trim(),
+    );
+
+    if (!matchedAccount) {
+      setAdminNotice('Admin access denied. Use a valid Polo Park East admin username and passcode.');
+      return;
+    }
+
+    const nextSession = {
+      username: matchedAccount.username,
+      signedInAt: new Date().toISOString(),
+    };
+
+    window.localStorage.setItem(storageKeys.admin, JSON.stringify(nextSession));
+    setAdminSession(nextSession);
+    setAdminDraft(cloneSiteContent(siteContent));
+    setAdminNotice('Admin access approved for this device.');
+    setAdminUsername('');
+    setAdminPasscode('');
+    setCommunityView('admin');
+  };
+
+  const saveAdminContent = () => {
+    const nextContent = cloneSiteContent(adminDraft);
+    window.localStorage.setItem(storageKeys.siteContent, JSON.stringify(nextContent));
+    setSiteContent(nextContent);
+    setAdminDraft(cloneSiteContent(nextContent));
+    setAdminNotice('Homepage, golf panel, and footer content were saved for admins on this device.');
+  };
+
+  const resetAdminDraft = () => {
+    setAdminDraft(cloneSiteContent(siteContent));
+    setAdminNotice('Unsaved admin edits were discarded.');
+  };
+
+  const restoreDefaultContent = () => {
+    const defaults = cloneSiteContent(DEFAULT_SITE_CONTENT);
+    window.localStorage.removeItem(storageKeys.siteContent);
+    setSiteContent(defaults);
+    setAdminDraft(cloneSiteContent(defaults));
+    setAdminNotice('Default launch content was restored.');
+  };
+
+  const logoutAdmin = () => {
+    window.localStorage.removeItem(storageKeys.admin);
+    setAdminSession(null);
+    setAdminDraft(cloneSiteContent(siteContent));
+    setAdminNotice('Admin session cleared from this device.');
+    setCommunityView('overview');
   };
 
   const handleInstallApp = async () => {
@@ -915,7 +1252,7 @@ function App() {
       const aiReply = await chatWithAI(prompt, {
         announcements: [],
         events: [],
-        amenities: amenityHighlights.map((item) => ({
+        amenities: siteContent.amenitySpotlights.map((item) => ({
           id: item.title,
           name: item.title,
           icon: item.title,
@@ -947,7 +1284,527 @@ function App() {
     });
   };
 
+  const renderImageField = (
+    label: string,
+    value: string,
+    onSelect: (nextValue: string) => void,
+    onUpload: (file: File | null | undefined) => Promise<void>,
+  ) => (
+    <div className="admin-image-field">
+      <label>
+        {label}
+        <input
+          value={value}
+          onChange={(event) => onSelect(event.target.value)}
+          placeholder="Paste an image URL, use a project image path, or upload a file"
+        />
+      </label>
+      <label>
+        Choose from official image library
+        <select value={value} onChange={(event) => onSelect(event.target.value)}>
+          <option value="">Select an official image</option>
+          {officialImageChoices.map((item) => (
+            <option key={item.src} value={item.src}>
+              {item.label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="admin-upload-label">
+        Upload replacement image
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(event) => {
+            void onUpload(event.target.files?.[0]);
+            event.currentTarget.value = '';
+          }}
+        />
+      </label>
+      <div className="admin-image-preview">
+        <img src={value} alt={label} />
+      </div>
+    </div>
+  );
+
   const renderCommunityView = () => {
+    if (activeCommunityView === 'admin') {
+      return (
+        <div className="page-grid">
+          <section className="surface-panel admin-shell">
+            <div className="section-heading">
+              <div>
+                <h2>Admin content studio</h2>
+                <p>
+                  Approved admins can update homepage text, golf panel details, preview
+                  cards, footer copy, and imagery from one place.
+                </p>
+              </div>
+              <div className="meta-chip">
+                <ShieldCheck size={16} />
+                Admin only
+              </div>
+            </div>
+
+            {!adminSession ? (
+              <div className="admin-gate">
+                <div className="admin-gate-copy">
+                  <h3>Secure the editing side</h3>
+                  <p>
+                    This admin area is limited to approved Polo Park East admins. Sign in
+                    to update launch copy, swap homepage photos, and manage the live
+                    on-device content set.
+                  </p>
+                  <ul>
+                    <li>Update homepage, resident-app, and golf panel copy</li>
+                    <li>Select official images or upload replacements for this device</li>
+                    <li>Save or restore launch content without editing code</li>
+                  </ul>
+                </div>
+
+                <div className="admin-auth-panel">
+                  <label>
+                    Admin username
+                    <input
+                      value={adminUsername}
+                      onChange={(event) => setAdminUsername(event.target.value)}
+                      placeholder="Approved admin username"
+                    />
+                  </label>
+                  <label>
+                    Admin passcode
+                    <input
+                      value={adminPasscode}
+                      onChange={(event) => setAdminPasscode(event.target.value)}
+                      placeholder="Admin passcode"
+                      type="password"
+                    />
+                  </label>
+                  <button className="primary-button" onClick={loginAdmin} type="button">
+                    Enter admin section
+                  </button>
+                  <p className="muted-note">
+                    Current build note: this is a client-side admin gate for launch prep.
+                    Replace it with server-side auth before public production rollout.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="admin-dashboard">
+                <div className="admin-toolbar">
+                  <div className="resident-badge">
+                    <ShieldCheck size={16} />
+                    Signed in as {adminSession.username}
+                  </div>
+                  <div className="admin-toolbar-actions">
+                    <button className="primary-button" onClick={saveAdminContent} type="button">
+                      Save content
+                    </button>
+                    <button className="secondary-button" onClick={resetAdminDraft} type="button">
+                      Discard edits
+                    </button>
+                    <button className="ghost-button" onClick={restoreDefaultContent} type="button">
+                      Restore defaults
+                    </button>
+                    <button className="ghost-button" onClick={logoutAdmin} type="button">
+                      Log out
+                    </button>
+                  </div>
+                </div>
+
+                <div className="admin-grid">
+                  <article className="admin-card">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Hero section</h2>
+                      </div>
+                    </div>
+                    <div className="admin-form-grid">
+                      <label>
+                        Hero badge
+                        <input
+                          value={adminDraft.heroBadge}
+                          onChange={(event) => updateAdminField('heroBadge', event.target.value)}
+                        />
+                      </label>
+                      <label>
+                        Hero title
+                        <input
+                          value={adminDraft.heroTitle}
+                          onChange={(event) => updateAdminField('heroTitle', event.target.value)}
+                        />
+                      </label>
+                      <label className="full-span">
+                        Hero body
+                        <textarea
+                          value={adminDraft.heroText}
+                          onChange={(event) => updateAdminField('heroText', event.target.value)}
+                        />
+                      </label>
+                    </div>
+                    {renderImageField(
+                      'Hero image',
+                      adminDraft.heroImage,
+                      (nextValue) => updateAdminField('heroImage', nextValue),
+                      async (file) => {
+                        await applyUploadedAdminImage(file, (nextImage) =>
+                          updateAdminField('heroImage', nextImage));
+                      },
+                    )}
+                  </article>
+
+                  <article className="admin-card">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Resident app panel</h2>
+                      </div>
+                    </div>
+                    <div className="admin-form-grid">
+                      <label>
+                        Eyebrow
+                        <input
+                          value={adminDraft.residentAppEyebrow}
+                          onChange={(event) =>
+                            updateAdminField('residentAppEyebrow', event.target.value)}
+                        />
+                      </label>
+                      <label>
+                        Title
+                        <input
+                          value={adminDraft.residentAppTitle}
+                          onChange={(event) =>
+                            updateAdminField('residentAppTitle', event.target.value)}
+                        />
+                      </label>
+                      <label className="full-span">
+                        Subtitle
+                        <textarea
+                          value={adminDraft.residentAppSubtitle}
+                          onChange={(event) =>
+                            updateAdminField('residentAppSubtitle', event.target.value)}
+                        />
+                      </label>
+                    </div>
+                    <div className="admin-list-grid">
+                      {adminDraft.residentAppBullets.map((item, index) => (
+                        <label key={`${item}-${index}`}>
+                          App bullet {index + 1}
+                          <input
+                            value={item}
+                            onChange={(event) =>
+                              updateStringListItem('residentAppBullets', index, event.target.value)}
+                          />
+                        </label>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="admin-card full-width">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Resident updates</h2>
+                      </div>
+                    </div>
+                    <div className="admin-list-grid three-up">
+                      {adminDraft.residentUpdates.map((item, index) => (
+                        <div key={`${item.title}-${index}`} className="admin-list-card">
+                          <label>
+                            Title
+                            <input
+                              value={item.title}
+                              onChange={(event) =>
+                                updateObjectListItem('residentUpdates', index, 'title', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Meta label
+                            <input
+                              value={item.meta}
+                              onChange={(event) =>
+                                updateObjectListItem('residentUpdates', index, 'meta', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Copy
+                            <textarea
+                              value={item.copy}
+                              onChange={(event) =>
+                                updateObjectListItem('residentUpdates', index, 'copy', event.target.value)}
+                            />
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="admin-card full-width">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Community highlight cards</h2>
+                      </div>
+                    </div>
+                    <div className="admin-list-grid three-up">
+                      {adminDraft.eventHighlights.map((item, index) => (
+                        <div key={`${item.title}-${index}`} className="admin-list-card">
+                          <label>
+                            Title
+                            <input
+                              value={item.title}
+                              onChange={(event) =>
+                                updateObjectListItem('eventHighlights', index, 'title', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Label
+                            <input
+                              value={item.label}
+                              onChange={(event) =>
+                                updateObjectListItem('eventHighlights', index, 'label', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Date
+                            <input
+                              value={item.date}
+                              onChange={(event) =>
+                                updateObjectListItem('eventHighlights', index, 'date', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Copy
+                            <textarea
+                              value={item.copy}
+                              onChange={(event) =>
+                                updateObjectListItem('eventHighlights', index, 'copy', event.target.value)}
+                            />
+                          </label>
+                          {renderImageField(
+                            `Highlight image ${index + 1}`,
+                            item.image,
+                            (nextValue) =>
+                              updateObjectListItem('eventHighlights', index, 'image', nextValue),
+                            async (file) => {
+                              await applyUploadedAdminImage(file, (nextImage) =>
+                                updateObjectListItem('eventHighlights', index, 'image', nextImage));
+                            },
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="admin-card full-width">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Amenities ribbon</h2>
+                      </div>
+                    </div>
+                    <div className="admin-list-grid three-up">
+                      {adminDraft.amenitySpotlights.map((item, index) => (
+                        <div key={`${item.title}-${index}`} className="admin-list-card">
+                          <label>
+                            Amenity title
+                            <input
+                              value={item.title}
+                              onChange={(event) =>
+                                updateObjectListItem('amenitySpotlights', index, 'title', event.target.value)}
+                            />
+                          </label>
+                          {renderImageField(
+                            `Amenity image ${index + 1}`,
+                            item.image,
+                            (nextValue) =>
+                              updateObjectListItem('amenitySpotlights', index, 'image', nextValue),
+                            async (file) => {
+                              await applyUploadedAdminImage(file, (nextImage) =>
+                                updateObjectListItem('amenitySpotlights', index, 'image', nextImage));
+                            },
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="admin-card">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Golf panel</h2>
+                      </div>
+                    </div>
+                    <div className="admin-form-grid">
+                      <label>
+                        Golf title
+                        <input
+                          value={adminDraft.golfPanelTitle}
+                          onChange={(event) => updateAdminField('golfPanelTitle', event.target.value)}
+                        />
+                      </label>
+                      <label>
+                        Golf subtitle
+                        <input
+                          value={adminDraft.golfPanelSubtitle}
+                          onChange={(event) =>
+                            updateAdminField('golfPanelSubtitle', event.target.value)}
+                        />
+                      </label>
+                    </div>
+                    {renderImageField(
+                      'Golf panel image',
+                      adminDraft.golfPanelImage,
+                      (nextValue) => updateAdminField('golfPanelImage', nextValue),
+                      async (file) => {
+                        await applyUploadedAdminImage(file, (nextImage) =>
+                          updateAdminField('golfPanelImage', nextImage));
+                      },
+                    )}
+                    {renderImageField(
+                      'Golf scorecard image',
+                      adminDraft.golfScorecardImage,
+                      (nextValue) => updateAdminField('golfScorecardImage', nextValue),
+                      async (file) => {
+                        await applyUploadedAdminImage(file, (nextImage) =>
+                          updateAdminField('golfScorecardImage', nextImage));
+                      },
+                    )}
+                  </article>
+
+                  <article className="admin-card">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Footer</h2>
+                      </div>
+                    </div>
+                    <div className="admin-form-grid">
+                      <label className="full-span">
+                        Footer description
+                        <textarea
+                          value={adminDraft.footerDescription}
+                          onChange={(event) =>
+                            updateAdminField('footerDescription', event.target.value)}
+                        />
+                      </label>
+                    </div>
+                    <div className="admin-list-grid">
+                      {adminDraft.footerQuickLinks.map((item, index) => (
+                        <label key={`${item}-${index}`}>
+                          Quick link {index + 1}
+                          <input
+                            value={item}
+                            onChange={(event) =>
+                              updateStringListItem('footerQuickLinks', index, event.target.value)}
+                          />
+                        </label>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="admin-card full-width">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Golf rates and leagues</h2>
+                      </div>
+                    </div>
+                    <div className="admin-list-grid three-up">
+                      {adminDraft.golfRates.map((item, index) => (
+                        <div key={`${item.title}-${index}`} className="admin-list-card">
+                          <label>
+                            Rate title
+                            <input
+                              value={item.title}
+                              onChange={(event) =>
+                                updateObjectListItem('golfRates', index, 'title', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Price/value
+                            <input
+                              value={item.value}
+                              onChange={(event) =>
+                                updateObjectListItem('golfRates', index, 'value', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Note
+                            <textarea
+                              value={item.note}
+                              onChange={(event) =>
+                                updateObjectListItem('golfRates', index, 'note', event.target.value)}
+                            />
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="admin-list-grid three-up">
+                      {adminDraft.golfLeagues.map((item, index) => (
+                        <div key={`${item.title}-${index}`} className="admin-list-card">
+                          <label>
+                            League title
+                            <input
+                              value={item.title}
+                              onChange={(event) =>
+                                updateObjectListItem('golfLeagues', index, 'title', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            League details
+                            <textarea
+                              value={item.copy}
+                              onChange={(event) =>
+                                updateObjectListItem('golfLeagues', index, 'copy', event.target.value)}
+                            />
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="admin-card full-width">
+                    <div className="section-heading compact">
+                      <div>
+                        <h2>Neighbor chat preview</h2>
+                      </div>
+                    </div>
+                    <div className="admin-list-grid three-up">
+                      {adminDraft.neighborPreview.map((item, index) => (
+                        <div key={`${item.author}-${index}`} className="admin-list-card">
+                          <label>
+                            Resident name
+                            <input
+                              value={item.author}
+                              onChange={(event) =>
+                                updateObjectListItem('neighborPreview', index, 'author', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Time label
+                            <input
+                              value={item.time}
+                              onChange={(event) =>
+                                updateObjectListItem('neighborPreview', index, 'time', event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Preview text
+                            <textarea
+                              value={item.text}
+                              onChange={(event) =>
+                                updateObjectListItem('neighborPreview', index, 'text', event.target.value)}
+                            />
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                </div>
+              </div>
+            )}
+
+            {adminNotice ? <p className="inline-note admin-note">{adminNotice}</p> : null}
+          </section>
+        </div>
+      );
+    }
+
     if (activeCommunityView === 'residents') {
       return (
         <div className="page-grid">
@@ -1315,17 +2172,14 @@ function App() {
         <section className="concept-home-layout">
           <div className="concept-home-main">
             <section className="concept-hero-card">
-              <img src="/images/ppe-sign-hero.jpeg" alt="Polo Park East entrance sign" />
+              <img src={siteContent.heroImage} alt="Polo Park East entrance sign" />
               <div className="concept-hero-copy">
                 <div className="concept-hero-badge">
                   <BadgeCheck size={16} />
-                  A resident-owned 55+ golf community
+                  {siteContent.heroBadge}
                 </div>
-                <h1>Welcome Home to Polo Park East</h1>
-                <p>
-                  A refreshed digital front door for the Davenport community, built around
-                  resident tools, neighborhood connection, amenities, and golf.
-                </p>
+                <h1>{siteContent.heroTitle}</h1>
+                <p>{siteContent.heroText}</p>
                 <div className="cta-row">
                   <button
                     className="primary-button"
@@ -1385,7 +2239,7 @@ function App() {
                   </button>
                 </div>
                 <div className="update-list">
-                  {residentPulse.map((item) => (
+                  {siteContent.residentUpdates.map((item) => (
                     <article key={item.title} className="update-row">
                       <div className="update-icon">
                         <BellRing size={18} />
@@ -1410,7 +2264,7 @@ function App() {
                   </button>
                 </div>
                 <div className="event-card-grid">
-                  {homeEventHighlights.map((item) => (
+                  {siteContent.eventHighlights.map((item) => (
                     <article key={item.title} className="event-preview-card">
                       <img src={item.image} alt={item.title} />
                       <div className="event-preview-copy">
@@ -1435,7 +2289,7 @@ function App() {
                 </button>
               </div>
               <div className="amenity-ribbon-grid">
-                {amenitySpotlights.map((item) => (
+                {siteContent.amenitySpotlights.map((item) => (
                   <article key={item.title} className="amenity-ribbon-card">
                     <img src={item.image} alt={item.title} />
                     <span>{item.title}</span>
@@ -1448,11 +2302,11 @@ function App() {
           <aside className="concept-home-side">
             <section className="resident-app-preview">
               <div className="resident-app-head">
-                <span>PPE resident app</span>
-                <strong>Your community in the palm of your hand.</strong>
+                <span>{siteContent.residentAppEyebrow}</span>
+                <strong>{siteContent.residentAppTitle}</strong>
               </div>
               <div className="resident-app-list">
-                {residentAppBullets.map((item) => (
+                {siteContent.residentAppBullets.map((item) => (
                   <div key={item} className="resident-app-row">
                     <BadgeCheck size={15} />
                     <span>{item}</span>
@@ -1463,7 +2317,7 @@ function App() {
                 <img src="/images/ppe-logo.png" alt="Polo Park East app preview" />
                 <div>
                   <strong>Polo Park East</strong>
-                  <span>Add the resident app to your home screen after verification.</span>
+                  <span>{siteContent.residentAppSubtitle}</span>
                 </div>
               </div>
             </section>
@@ -1471,17 +2325,17 @@ function App() {
             <section className="golf-preview-panel">
               <div className="golf-preview-head">
                 <div>
-                  <h2>Polo Park East Golf Club</h2>
-                  <p>A premier 9-hole golf experience</p>
+                  <h2>{siteContent.golfPanelTitle}</h2>
+                  <p>{siteContent.golfPanelSubtitle}</p>
                 </div>
               </div>
               <div className="golf-preview-nav">
                 <button onClick={() => switchExperience('golf')} type="button">Overview</button>
-                <button onClick={() => { switchExperience('golf'); setGolfView('rates'); }} type="button">Rates</button>
-                <button onClick={() => { switchExperience('golf'); setGolfView('leagues'); }} type="button">Leagues</button>
-                <button onClick={() => { switchExperience('golf'); setGolfView('course'); }} type="button">Photos</button>
+                <button onClick={() => switchExperience('golf', 'rates')} type="button">Rates</button>
+                <button onClick={() => switchExperience('golf', 'leagues')} type="button">Leagues</button>
+                <button onClick={() => switchExperience('golf', 'course')} type="button">Photos</button>
               </div>
-              <img className="golf-preview-image" src="/images/golf-hero.jpg" alt="Polo Park East golf course" />
+              <img className="golf-preview-image" src={siteContent.golfPanelImage} alt="Polo Park East golf course" />
               <div className="golf-booking-banner">
                 <div>
                   <strong>Book your tee time</strong>
@@ -1494,17 +2348,19 @@ function App() {
               <div className="golf-preview-grid">
                 <article className="golf-info-card">
                   <h3>Rates</h3>
-                  <div className="golf-rate-row"><span>9 holes</span><strong>$20</strong></div>
-                  <div className="golf-rate-row"><span>Second 9</span><strong>$10</strong></div>
-                  <div className="golf-rate-row"><span>Scrambles</span><strong>$16-$20</strong></div>
-                  <div className="golf-rate-row"><span>Twilight</span><strong>$15</strong></div>
+                  {siteContent.golfRates.slice(0, 4).map((rate) => (
+                    <div key={rate.title} className="golf-rate-row">
+                      <span>{rate.title}</span>
+                      <strong>{rate.value}</strong>
+                    </div>
+                  ))}
                 </article>
                 <article className="golf-info-card">
                   <h3>Leagues & scrambles</h3>
                   <ul>
-                    <li>Men&apos;s scramble on Wednesdays and Saturdays</li>
-                    <li>Ladies&apos; scramble on Tuesdays and Thursdays</li>
-                    <li>Please arrive by 7:30 AM to participate</li>
+                    {siteContent.golfLeagues.map((league) => (
+                      <li key={league.title}>{league.copy}</li>
+                    ))}
                   </ul>
                 </article>
               </div>
@@ -1551,7 +2407,7 @@ function App() {
                     View full scorecard
                   </a>
                 </div>
-                <img src="/images/golf-tile-3.png" alt="Polo Park East golf course promotional image" />
+                <img src={siteContent.golfScorecardImage} alt="Polo Park East golf course promotional image" />
               </div>
               <div className="golf-contact-strip">
                 <span>Davenport, FL</span>
@@ -1568,7 +2424,7 @@ function App() {
                 </div>
               </div>
               <div className="neighbor-chat-list">
-                {neighborPreview.map((item) => (
+                {siteContent.neighborPreview.map((item) => (
                   <article key={`${item.author}-${item.time}`} className="neighbor-chat-row">
                     <div className="neighbor-avatar">{item.author.slice(0, 1)}</div>
                     <div>
@@ -1596,15 +2452,14 @@ function App() {
             <div>
               <strong>Polo Park East</strong>
               <p>
-                A resident-owned 55+ modular home community offering golf, scenic
-                Florida lakeside living, and a warm neighborhood atmosphere.
+                {siteContent.footerDescription}
               </p>
             </div>
           </div>
           <div className="concept-footer-links">
             <span>Quick links</span>
             <div>
-              {footerQuickLinks.map((item) => (
+              {siteContent.footerQuickLinks.map((item) => (
                 <button
                   key={item}
                   onClick={() => {
@@ -1656,7 +2511,7 @@ function App() {
               </div>
             </div>
             <div className="rate-grid">
-              {golfRates.map((rate) => (
+              {siteContent.golfRates.map((rate) => (
                 <article key={rate.title} className="rate-card">
                   <div className="surface-icon">
                     <CircleDollarSign size={22} strokeWidth={1.9} />
@@ -1711,7 +2566,7 @@ function App() {
               </div>
             </div>
             <div className="stat-grid compact">
-              {golfLeagues.map((league) => (
+              {siteContent.golfLeagues.map((league) => (
                 <article key={league.title} className="surface-card">
                   <div className="surface-icon">
                     <CalendarDays size={22} strokeWidth={1.8} />
@@ -1914,13 +2769,20 @@ function App() {
 
         <div className="topbar-actions">
           <button
-            className="resident-login-button"
-            onClick={() => {
-              switchExperience('community');
-              setCommunityView('residents');
-            }}
+            className="ghost-button admin-trigger-button"
+            onClick={openAdminSection}
             type="button"
           >
+            <ShieldCheck size={16} />
+            {adminSession ? 'Admin CMS' : 'Admin'}
+          </button>
+            <button
+              className="resident-login-button"
+              onClick={() => {
+              switchExperience('community', 'residents');
+              }}
+              type="button"
+            >
             <BadgeCheck size={16} />
             Resident Login
           </button>
@@ -1964,7 +2826,7 @@ function App() {
         </section>
 
         <SectionNav
-          items={experience === 'community' ? communityNav : golfNav}
+          items={experience === 'community' ? communitySectionNav : golfNav}
           active={experience === 'community' ? activeCommunityView : activeGolfView}
           onSelect={(next) => {
             if (experience === 'community') {

@@ -44,6 +44,10 @@ textarea {
   font: inherit;
 }
 
+select {
+  font: inherit;
+}
+
 button {
   cursor: pointer;
 }
@@ -607,6 +611,11 @@ a {
   padding: 12px 16px;
 }
 
+.admin-trigger-button {
+  min-height: 46px;
+  border-radius: 12px;
+}
+
 .primary-button,
 .secondary-button {
   min-height: 52px;
@@ -717,6 +726,10 @@ a {
 }
 
 .resident-form input,
+.admin-card input,
+.admin-card select,
+.admin-card textarea,
+.admin-auth-panel input,
 .concierge-composer textarea,
 .chat-composer textarea {
   width: 100%;
@@ -829,6 +842,12 @@ a {
 .chat-composer textarea,
 .concierge-composer textarea {
   min-height: 118px;
+  resize: vertical;
+}
+
+.admin-card textarea,
+.admin-auth-panel textarea {
+  min-height: 120px;
   resize: vertical;
 }
 
@@ -1604,6 +1623,147 @@ a {
   letter-spacing: 0.04em;
 }
 
+.admin-shell {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-gate,
+.admin-dashboard,
+.admin-grid,
+.admin-list-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-gate {
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+}
+
+.admin-gate-copy,
+.admin-auth-panel,
+.admin-card,
+.admin-list-card {
+  padding: 22px;
+  border-radius: 24px;
+  background: white;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-gate-copy h3,
+.admin-card h3,
+.admin-list-card h3 {
+  margin: 0 0 10px;
+  font-family: 'Fraunces', serif;
+  font-size: 1.42rem;
+}
+
+.admin-gate-copy p,
+.admin-list-card p {
+  margin: 0;
+  color: var(--ink-700);
+  line-height: 1.6;
+}
+
+.admin-gate-copy ul {
+  margin: 16px 0 0;
+  padding-left: 18px;
+  color: var(--ink-700);
+  line-height: 1.7;
+}
+
+.admin-auth-panel,
+.admin-form-grid,
+.admin-card label,
+.admin-image-field {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-card label,
+.admin-auth-panel label {
+  font-weight: 700;
+  color: var(--ink-900);
+}
+
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-card {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.admin-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-form-grid .full-span {
+  grid-column: 1 / -1;
+}
+
+.admin-list-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-list-grid.three-up {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.admin-list-card {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-image-field {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(247, 243, 235, 0.9);
+  border: 1px solid rgba(19, 48, 74, 0.08);
+}
+
+.admin-upload-label input[type='file'] {
+  padding: 12px;
+  background: white;
+}
+
+.admin-image-preview {
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(19, 48, 74, 0.1);
+  background: white;
+}
+
+.admin-image-preview img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.admin-note {
+  margin: 0;
+}
+
 @keyframes pageFade {
   from {
     opacity: 0;
@@ -1621,7 +1781,8 @@ a {
   .split-panel,
   .resident-gate,
   .resident-ready,
-  .chat-layout {
+  .chat-layout,
+  .admin-gate {
     grid-template-columns: 1fr;
   }
 
@@ -1630,7 +1791,11 @@ a {
   .stat-grid.compact,
   .rate-grid,
   .link-grid,
-  .concept-footer {
+  .concept-footer,
+  .admin-grid,
+  .admin-form-grid,
+  .admin-list-grid,
+  .admin-list-grid.three-up {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1693,7 +1858,11 @@ a {
   .amenity-ribbon-grid,
   .golf-preview-grid,
   .golf-scorecard-panel,
-  .concept-footer {
+  .concept-footer,
+  .admin-grid,
+  .admin-form-grid,
+  .admin-list-grid,
+  .admin-list-grid.three-up {
     grid-template-columns: 1fr;
   }
 
@@ -1740,5 +1909,10 @@ a {
   .message-bubble,
   .concierge-bubble {
     max-width: 100%;
+  }
+
+  .admin-toolbar,
+  .admin-toolbar-actions {
+    align-items: stretch;
   }
 }
