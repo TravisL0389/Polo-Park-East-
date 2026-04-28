@@ -1,0 +1,21 @@
+{
+  "name": "Polo Park East Resident App",
+  "short_name": "Polo Park East",
+  "description": "Resident platform and golf microsite for the Polo Park East 55+ modular home community.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f2e7",
+  "theme_color": "#0d2233",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Polo Park East 55+ Golf Community",
+  "description": "A luxury residents-only platform for the Polo Park East 55+ Golf Community, featuring events, directories, forums, and an AI concierge.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
