@@ -935,6 +935,511 @@ a {
   background: linear-gradient(135deg, rgba(20, 50, 36, 0.98), rgba(19, 78, 89, 0.94));
 }
 
+.concept-home-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.78fr) minmax(320px, 0.92fr);
+  gap: 18px;
+}
+
+.concept-home-main,
+.concept-home-side {
+  display: grid;
+  gap: 18px;
+}
+
+.concept-hero-card {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-soft);
+}
+
+.concept-hero-card > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.concept-hero-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8, 27, 43, 0.86), rgba(8, 27, 43, 0.3) 48%, rgba(8, 27, 43, 0.12)),
+    linear-gradient(180deg, rgba(22, 89, 145, 0.06), rgba(8, 27, 43, 0.16));
+}
+
+.concept-hero-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  max-width: 53%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 34px;
+  color: white;
+}
+
+.concept-hero-copy h1 {
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.7rem, 4.7vw, 4.8rem);
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+}
+
+.concept-hero-copy p {
+  margin: 0;
+  max-width: 26ch;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.06rem;
+}
+
+.concept-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 10px 14px;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(227, 193, 118, 0.34);
+  backdrop-filter: blur(10px);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.quick-link-strip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0;
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.98), rgba(249, 244, 236, 0.98));
+  border-radius: 22px;
+  border: 1px solid rgba(184, 147, 83, 0.18);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.quick-link-strip button {
+  border: 0;
+  background: transparent;
+  min-height: 108px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  color: var(--navy-900);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.quick-link-strip button + button {
+  border-left: 1px solid rgba(19, 48, 74, 0.08);
+}
+
+.quick-link-strip button svg {
+  color: var(--gold-500);
+}
+
+.concept-dashboard-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.45fr;
+  gap: 18px;
+}
+
+.section-heading.compact {
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.section-heading.compact h2 {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+}
+
+.text-link-button {
+  border: 0;
+  background: transparent;
+  color: var(--navy-700);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.update-list,
+.neighbor-chat-list {
+  display: grid;
+  gap: 12px;
+}
+
+.update-row,
+.neighbor-chat-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 0;
+}
+
+.update-row + .update-row,
+.neighbor-chat-row + .neighbor-chat-row {
+  border-top: 1px solid rgba(19, 48, 74, 0.08);
+}
+
+.update-icon,
+.neighbor-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(211, 162, 77, 0.18), rgba(45, 109, 164, 0.14));
+  color: var(--navy-900);
+  font-weight: 800;
+}
+
+.update-row strong,
+.event-preview-copy h3,
+.golf-info-card h3,
+.neighbor-chat-row strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.update-row p,
+.event-preview-copy p,
+.neighbor-chat-row p,
+.golf-preview-head p {
+  margin: 0;
+  color: var(--ink-700);
+  line-height: 1.55;
+}
+
+.update-row span,
+.neighbor-chat-row > span {
+  color: var(--navy-700);
+  font-size: 0.77rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.event-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.event-preview-card {
+  overflow: hidden;
+  border-radius: 18px;
+  background: #fffdf8;
+  border: 1px solid rgba(19, 48, 74, 0.08);
+  box-shadow: var(--shadow-card);
+}
+
+.event-preview-card img {
+  width: 100%;
+  height: 138px;
+  object-fit: cover;
+}
+
+.event-preview-copy {
+  padding: 14px;
+}
+
+.event-preview-copy span,
+.resident-app-head span,
+.neighbor-chat-head span {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--gold-500);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.event-preview-copy h3 {
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+}
+
+.amenities-ribbon {
+  background: linear-gradient(180deg, rgba(22, 59, 48, 0.98), rgba(13, 34, 51, 0.96));
+  color: white;
+}
+
+.amenities-ribbon .section-heading h2,
+.amenities-ribbon .text-link-button {
+  color: white;
+}
+
+.amenities-ribbon .section-heading {
+  margin-bottom: 14px;
+}
+
+.amenity-ribbon-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.amenity-ribbon-card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(227, 193, 118, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.amenity-ribbon-card img {
+  width: 100%;
+  height: 92px;
+  object-fit: cover;
+}
+
+.amenity-ribbon-card span {
+  display: block;
+  padding: 10px 12px;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.resident-app-preview {
+  border-radius: 24px;
+  padding: 20px;
+  color: white;
+  background: linear-gradient(180deg, rgba(12, 35, 56, 0.98), rgba(18, 72, 61, 0.94));
+  box-shadow: var(--shadow-soft);
+}
+
+.resident-app-head strong {
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.resident-app-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.resident-app-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.resident-phone-mock {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(8, 26, 42, 0.98), rgba(18, 53, 82, 0.98));
+  border: 1px solid rgba(227, 193, 118, 0.3);
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.resident-phone-mock img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+}
+
+.resident-phone-mock strong {
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+}
+
+.resident-phone-mock span {
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.5;
+}
+
+.golf-preview-panel {
+  overflow: hidden;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(11, 34, 54, 0.98), rgba(16, 58, 89, 0.98));
+  color: white;
+  box-shadow: var(--shadow-soft);
+}
+
+.golf-preview-head {
+  padding: 22px 20px 14px;
+}
+
+.golf-preview-head h2 {
+  margin: 0 0 6px;
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+}
+
+.golf-preview-head p {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.golf-preview-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 20px 12px;
+  border-bottom: 1px solid rgba(227, 193, 118, 0.22);
+}
+
+.golf-preview-nav button {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.74);
+  padding: 8px 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.golf-preview-image {
+  width: 100%;
+  height: 176px;
+  object-fit: cover;
+}
+
+.golf-booking-banner {
+  margin: 14px 20px 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(227, 193, 118, 0.24);
+}
+
+.golf-booking-banner strong,
+.neighbor-chat-head strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.golf-booking-banner span {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.golf-booking-banner a {
+  min-width: 138px;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy-900);
+  background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.golf-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 16px 20px 20px;
+}
+
+.golf-info-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink-900);
+}
+
+.golf-info-card h3 {
+  margin: 0 0 12px;
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+}
+
+.golf-info-card ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ink-700);
+  line-height: 1.6;
+}
+
+.golf-rate-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(19, 48, 74, 0.08);
+}
+
+.golf-rate-row:first-of-type {
+  border-top: 0;
+}
+
+.golf-contact-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 20px 18px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.neighbor-chat-card {
+  border-radius: 22px;
+  padding: 18px;
+  background: linear-gradient(180deg, rgba(36, 67, 44, 0.98), rgba(17, 40, 29, 0.96));
+  color: white;
+  box-shadow: var(--shadow-card);
+}
+
+.neighbor-chat-head {
+  margin-bottom: 8px;
+}
+
+.neighbor-chat-head span {
+  margin-bottom: 0;
+  color: rgba(227, 193, 118, 0.92);
+}
+
+.neighbor-chat-row {
+  grid-template-columns: auto 1fr auto;
+}
+
+.neighbor-chat-row p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.neighbor-chat-row > span {
+  color: rgba(255, 255, 255, 0.58);
+  text-transform: none;
+}
+
+.chat-open-button {
+  margin-top: 14px;
+  width: 100%;
+}
+
 @keyframes pageFade {
   from {
     opacity: 0;
@@ -947,6 +1452,7 @@ a {
 }
 
 @media (max-width: 1100px) {
+  .concept-home-layout,
   .hero-card,
   .split-panel,
   .resident-gate,
@@ -955,11 +1461,16 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .concept-dashboard-grid,
   .stat-grid,
   .stat-grid.compact,
   .rate-grid,
   .link-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .concept-hero-copy {
+    max-width: 68%;
   }
 
   .hero-copy h1 {
@@ -1007,12 +1518,33 @@ a {
   }
 
   .stat-grid,
+  .concept-dashboard-grid,
   .stat-grid.compact,
   .rate-grid,
   .link-grid,
   .mini-gallery,
-  .gallery-grid {
+  .gallery-grid,
+  .event-card-grid,
+  .amenity-ribbon-grid,
+  .golf-preview-grid {
     grid-template-columns: 1fr;
+  }
+
+  .concept-hero-copy {
+    max-width: none;
+    padding: 22px;
+  }
+
+  .quick-link-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quick-link-strip button + button {
+    border-left: 0;
+  }
+
+  .concept-hero-card {
+    min-height: 420px;
   }
 
   .gallery-card,
